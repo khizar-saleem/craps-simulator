@@ -1,4 +1,4 @@
-package deepdive.cnm.crapssimulator;
+package deepdive.cnm.crapssimulator.controller;
 
 import android.view.Menu;
 import android.view.MenuItem;
@@ -9,6 +9,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import deepdive.cnm.crapssimulator.R;
+import deepdive.cnm.crapssimulator.view.RoundAdapter;
 import edu.cnm.deepdive.craps.model.Game;
 import edu.cnm.deepdive.craps.model.Game.Roll;
 import edu.cnm.deepdive.craps.model.Game.Round;
@@ -18,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
 
   private Game game;
   private Random rng;
-  private ArrayAdapter<Roll> adapter;
+  private RoundAdapter adapter;
   private TextView tally;
   private ListView rolls;
 
@@ -27,9 +29,8 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
     tally = findViewById(R.id.tally);
-    tally.setText("This will be my win/loss tally line");
     rolls = findViewById(R.id.rolls);
-    adapter = new ArrayAdapter<>(this, R.layout.single_roll);
+    adapter = new RoundAdapter(this);
     rolls.setAdapter(adapter);
     rng = new Random();
     resetGame();
@@ -59,10 +60,7 @@ public class MainActivity extends AppCompatActivity {
   }
 
   private void updateDisplay(Round round) {
-    adapter.clear();
-    if (round != null) {
-      adapter.addAll(round.getRolls());
-    }
+    adapter.add(round);
     tally.setText(getString(R.string.tally_format,
         game.getWins(), game.getPlays(), 100 * game.getPercentage()));
   }
