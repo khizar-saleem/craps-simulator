@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+import androidx.annotation.ColorInt;
 import androidx.core.content.ContextCompat;
 import deepdive.cnm.crapssimulator.R;
 import edu.cnm.deepdive.craps.model.Game.Roll;
@@ -17,8 +18,10 @@ import edu.cnm.deepdive.craps.model.Game.State;
 
 public class RoundAdapter extends ArrayAdapter<Roll> {
 
-  private Drawable [] faces;
+  private final Drawable [] faces;
   private State state;
+  @ColorInt private final int winningRound;
+  @ColorInt private final int losingRound;
 
   public RoundAdapter(Context context) {
     super(context, R.layout.single_roll);
@@ -29,6 +32,8 @@ public class RoundAdapter extends ArrayAdapter<Roll> {
       faces[i] = ContextCompat.getDrawable(context,
           res.getIdentifier("face_" + (i + 1), "drawable", pkg));
     }
+    winningRound = ContextCompat.getColor(context, R.color.winningRound);
+    losingRound = ContextCompat.getColor(context, R.color.losingRound);
   }
 
   public void add(Round round) {
@@ -54,6 +59,7 @@ public class RoundAdapter extends ArrayAdapter<Roll> {
     ((ImageView) view.findViewById(R.id.die2)).setImageDrawable(faces[die2 - 1]);
     ((TextView) view.findViewById(R.id.value)).setText(
         getContext().getString(R.string.value_format, value));
+    view.setBackgroundColor((state == State.WIN) ? winningRound : losingRound);
     return view;
   }
 }
